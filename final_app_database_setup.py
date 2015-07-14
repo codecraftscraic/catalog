@@ -21,6 +21,8 @@ class Team(Base):
 
 	tid = Column(Integer, primary_key=True)
 	team_name = Column(String(50), nullable=False)
+	user_id = Column(Integer, ForeignKey('users.uid'))
+	owner = relationship(Users)
 
 
 class Players(Base):
@@ -34,9 +36,11 @@ class Players(Base):
 	position = Column(String(20))
 	team_id = Column(Integer, ForeignKey('team.tid'))
 	team = relationship(Team)
+	user_id = Column(Integer, ForeignKey('users.uid'))
+	owner = relationship(Users)
 
 
-engine = create_engine('sqlite:///restaurant.db')
+engine = create_engine('sqlite:///nhlteams.db')
 
 
 Base.metadata.create_all(engine)
