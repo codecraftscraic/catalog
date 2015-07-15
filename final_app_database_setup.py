@@ -31,7 +31,6 @@ class Players(Base):
 	fname = Column(String(80), nullable=False)
 	lname = Column(String(80), nullable=False)
 	pid = Column(Integer, primary_key=True)
-	description = Column(String(250))
 	number = Column(String(8))
 	position = Column(String(20))
 	team_id = Column(Integer, ForeignKey('team.tid'))
