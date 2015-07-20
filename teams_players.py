@@ -124,11 +124,7 @@ team11 = Team(team_name="New Jersey Devils")
 session.add(team11)
 session.commit()
 
-<<<<<<< .merge_file_XjnhX1
-players11 = Players(fname="", lname="", number="", position="", team=team11)
-=======
-players1 = Players(fname="Travis", lname="Zajac", number="19", position="Forward", team=team11)
->>>>>>> .merge_file_wBrgTL
+players11 = Players(fname="Travis", lname="Zajac", number="19", position="Forward", team=team11)
 
 session.add(players11)
 session.commit()
