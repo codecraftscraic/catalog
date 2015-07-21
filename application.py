@@ -1,45 +1,50 @@
-from flask import Flask
+from flask import Flask, url_for
 app  = Flask(__name__)
 
+###TO DO: Remember edge case of empty roster or no teams, give option to create
+
 @app.route('/')
-@app.route('/teams')
+@app.route('/teams/')
 def showTeams():
-	team = session.query(Team).first()
-	items = session.query(Players).filter_by(team_id = team.tid)
-	output = ''
-	for i in items:
-		output += i.team_name
-		output += '</br>'
-	return output
+	#return "All teams"
+	session.query.all()
+	return render_template('templates/teams.html', team = team)
 
 @app.route('/teams/new')
-def newTeam():
-	return "New team"
+def newTeam(tid):
+	#return "New team"
+	return render_template('templates/newTeam.html', team = team)
 
-@app.route('/teams/team_id/edit')
-def editTeam():
-	return "Edit teams"
+@app.route('/teams/<int:tid>/edit/')
+def editTeam(tid):
+	#return "Edit teams"
+	return render_template('templates/editTeam.html', team = team)
 
-@app.route('/teams/team_id/delete')
-def deleteTeam():
-	return "Delete teams"
+@app.route('/teams/<int:tid>/delete/')
+def deleteTeam(tid):
+	#return "Delete teams"
+	return render_template('templates/deleteTeam.html', team = team)
 
-@app.route('/teams/team_id')
-@app.route('/teams/team_id/roster')
-def showRoster():
-	return "Rosters"
+@app.route('/teams/<int:tid>/')
+@app.route('/teams/<int:tid>/roster/')
+def showRoster(tid):
+	#return "Rosters"
+	return render_template('templates/roster.html', team = team, player = player)
 
-@app.route('/teams/team_id/roster/new')
-def newPlayer():
-	return "New player"
+@app.route('/teams/<int:tid>/roster/new/')
+def newPlayer(pid):
+	#return "New player"
+	return render_template('templates/newPlayer.html', team = team, player = player)
 
-@app.route('/teams/team_id/roster/roster_id/edit')
-def editPlayer():
-	return "Edit player"
+@app.route('/teams/<int:tid>/roster/<int:pid>/edit/')
+def editPlayer(pid):
+	#return "Edit player"
+	return render_template('templates/editPlayer.html', team = team, player = player)
 
-@app.route('/teams/team_id/roster/roster_id/delete')
-def deletePlayer():
-	return "Delete player"
+@app.route('/teams/<int:tid>/roster/<int:pid>/delete/')
+def deletePlayer(pid):
+	#return "Delete player"
+	return render_template('templates/deletePlayer.html', team = team, player = player)
 
 if __name__ == '__main__':
 	app.debug = True

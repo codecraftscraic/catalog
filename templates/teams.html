@@ -1,0 +1,16 @@
+<html>
+	<body>
+		<h1>NHL Teams</h1>
+
+			{% for i in items %}
+
+			<a href="#">
+				<h2>{{i.team_name}}</h2> <a href = '#'>Edit</a> <a href = '#'>Delete</a>
+			</a>
+		</br>
+
+			{% endfor %}
+
+	</body>
+
+</html>
