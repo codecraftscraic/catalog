@@ -2,11 +2,14 @@
 	<body>
 		<h1>NHL Teams</h1>
 
-			{% for i in items %}
+			{% for i in team %}
 
 			<a href="#">
-				<h2>{{i.team_name}}</h2> <a href = '#'>Edit</a> <a href = '#'>Delete</a>
+				<h2>{{ i.team_name }}</h2> 
 			</a>
+				<a href = '#'>Edit</a> 
+				<a href = '#'>Delete</a>
+			<!--  {{ url_for('editTeam', team=i.tid) }}   {{ url_for('deleteTeam', team=i.tid) }}-->
 		</br>
 
 			{% endfor %}
