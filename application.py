@@ -16,55 +16,45 @@ session = DBSession()
 @app.route('/')
 @app.route('/teams/')
 def showTeams():
-	#return "All teams"
-	team = session.query(Team).all()
-	return render_template('teams.html', Team = team)
+	teamList = session.query(Team).all()
+	return render_template('teams.html',teams=teamList)
 
-@app.route('/teams/<int:tid>/new', methods=['GET', 'POST'])
-def newTeam(tid):
+@app.route('/teams/<int:team_id>/', methods=['GET','POST'])
+@app.route('/teams/<int:team_id>/roster/', methods=['GET','POST'])
+def showRoster(team_id):
+	team=session.query(Team).filter(Team.tid == team_id).one()
+	players=session.query(Players).filter(Players.team_id == team_id).all()
+	return render_template('roster.html', team=team, players=players)
+
+@app.route('/teams/<int:team_id>/edit/', methods=['GET', 'POST'])
+def editTeam(team_id):
+
+	return render_template('editTeam.html', Team = team)
+
+#@app.route('/teams/<int:team_id>/new', methods=['GET', 'POST'])
+#def newTeam(team_id):
 	#return "New team"
-	return render_template('templates/newTeam.html', Team = team)
+#	return render_template('newTeam.html', Team = team)
 
-@app.route('/teams/<int:tid>/edit/', methods=['GET', 'POST'])
-def editTeam(tid):
-	#return "Edit teams"
-	return render_template('templates/editTeam.html', Team = team)
-
-@app.route('/teams/<int:tid>/delete/', methods=['GET', 'POST'])
-def deleteTeam(tid):
+#@app.route('/teams/<int:team_id>/delete/', methods=['GET', 'POST'])
+#def deleteTeam(team_id):
 	#return "Delete teams"
-	return render_template('templates/deleteTeam.html', Team = team)
+#	return render_template('deleteTeam.html', Team = team)
 
-@app.route('/teams/<int:tid>/')
-@app.route('/teams/<int:tid>/roster/')
-def showRoster(tid):
-	#return "Rosters"
-	return render_template('templates/roster.html', Team = team, Players = player)
-
-@app.route('/teams/<int:tid>/<int:pid>/new/', methods=['GET', 'POST'])
-def newPlayer(pid):
+#@app.route('/teams/<int:team_id>/<int:pid>/new/', methods=['GET', 'POST'])
+#def newPlayer(pid):
 	#return "New player"
-	return render_template('templates/newPlayer.html', Team = team, Players = player)
+#	return render_template('newPlayer.html', Team = team, Players = player)
 
-@app.route('/teams/<int:tid>/<int:pid>/edit/', methods=['GET', 'POST'])
-def editPlayer(pid):
+#@app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
+#def editPlayer(pid):
 	#return "Edit player"
-	return render_template('templates/editPlayer.html', Team = team, Players = player)
+#	return render_template('editPlayer.html', Team = team, Players = player)
 
-@app.route('/teams/<int:tid>/<int:pid>/delete/', methods=['GET', 'POST'])
-def deletePlayer(pid):
+#@app.route('/teams/<int:team_id>/<int:pid>/delete/', methods=['GET', 'POST'])
+#def deletePlayer(pid):
 	#return "Delete player"
-	return render_template('templates/deletePlayer.html', Team = team, Players = player)
-
-
-
-
-
-
-
-
-
-
+#	return render_template('deletePlayer.html', Team = team, Players = player)
 
 
 

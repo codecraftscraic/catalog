@@ -2,17 +2,17 @@
 	<body>
 		<h1>NHL Teams</h1>
 
-			{% for i in team %}
-
-			<a href="#">
-				<h2>{{ i.team_name }}</h2> 
-			</a>
-				<a href = '#'>Edit</a> 
-				<a href = '#'>Delete</a>
-			<!--  {{ url_for('editTeam', team=i.tid) }}   {{ url_for('deleteTeam', team=i.tid) }}-->
-		</br>
-
+			<ul>
+			{% for team in teams %}
+				
+				<li><a href='{{url_for('showRoster', team_id = team.tid)}}'>
+					{{ team.team_name }}</a>
+					<input type='submit' value='edit' alt='edit team'/>
+					<input type='submit' value='delete' alt='delete team'/>
+				</li> 
+				
 			{% endfor %}
+			</ul>
 
 	</body>
 
