@@ -5,10 +5,10 @@
 			<ul>
 			{% for team in teams %}
 				
-				<li><a href='{{url_for('showRoster', team_id = team.tid)}}'>
-					{{ team.team_name }}</a>
-					<input type='submit' value='edit' alt='edit team'/>
-					<input type='submit' value='delete' alt='delete team'/>
+				<li>
+					<a href='{{url_for('showRoster', team_id = team.tid)}}'>{{ team.team_name }}</a>
+					<a href='{{url_for('editTeam', team_id = team.tid)}}'>Edit</a>
+					<a href='{{url_for('deleteTeam', team_id = team.tid)}}'>Delete</a>
 				</li> 
 				
 			{% endfor %}

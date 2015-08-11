@@ -3,15 +3,15 @@
 
 	<body>
 
-		<h1> New Player </h1>
+		<h1> Edit Team Name </h1>
 
-		<form action="#" method='post'>
+		<form action='{{url_for('editTeam', team_id=team.tid)}}' method='POST'>
 
-			<p>Team Name: </p> <input type='text' size='30' team_name='team_name' placeholder='{{item.team_name}}'>
+			<p><input type='text' size='30' name='teamname' alt='team name' placeholder='{{team.team_name}}'/>
 			
-		<input type='submit' value='Edit'>
+		<input type='submit' value='Save'/>
 
-		<a href='#'>Cancel</a>
+		<a href='{{url_for('showTeams')}}'>Cancel</a> </p>
 
 		</form>
 
