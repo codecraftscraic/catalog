@@ -34,7 +34,7 @@ def editTeam(team_id):
 	editedTeam=session.query(Team).filter(Team.tid == team_id).one()
 	if request.method == 'POST':
 		if request.form['teamname']:
-			editTeam.name = request.form['teamname']
+			editedTeam.team_name = request.form['teamname']
 			session.add(editedTeam)
 			session.commit()
 			flash("Team updated!")
@@ -53,15 +53,41 @@ def deleteTeam(team_id):
 	#return "New team"
 #	return render_template('newTeam.html', Team = team)
 
+@app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
+def editPlayer(pid):
+	editedPlayer=session.query(Players).filter(Players.pid == pid).one()
+	if request.method == 'POST':
+		if request.form['number']:
+			editedPlayer.number = request.form['number']
+			session.add(editedPlayer)
+			session.commit()
+			flash("Player number updated!")
+		if request.form['fname']:
+			editedPlayer.fname = request.form['fname']
+			session.add(editedPlayer)
+			session.commit()
+			flash("Player's first name updated!")
+		if request.form['lname']:
+			editedPlayer.fname = request.form['lname']
+			session.add(editedPlayer)
+			session.commit()
+			flash("Player last name updated!")
+		if request.form['postion']:
+			editedPlayer.fname = request.form['postion']
+			session.add(editedPlayer)
+			session.commit()
+			flash("Player position updated!")
+			#TO DO Ask if done editing the player before rendering the home page
+		return redirect(url_for('showTeams'))
+	else:
+		return render_template('editPlayer.html', players = editedPlayer)
+
+	#return render_template('editPlayer.html', Team = team, Players = player)
+
 #@app.route('/teams/<int:team_id>/<int:pid>/new/', methods=['GET', 'POST'])
 #def newPlayer(pid):
 	#return "New player"
 #	return render_template('newPlayer.html', Team = team, Players = player)
-
-#@app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
-#def editPlayer(pid):
-	#return "Edit player"
-#	return render_template('editPlayer.html', Team = team, Players = player)
 
 #@app.route('/teams/<int:team_id>/<int:pid>/delete/', methods=['GET', 'POST'])
 #def deletePlayer(pid):
@@ -71,5 +97,6 @@ def deleteTeam(team_id):
 
 
 if __name__ == '__main__':
+	app.secret_key = 'secret_key'
 	app.debug = True
 	app.run(host = '0.0.0.0', port = 5000)

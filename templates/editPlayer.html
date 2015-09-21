@@ -5,14 +5,14 @@
 
 		<h1> Edit Player </h1>
 
-		<form action="#" method='post'>
+		<form action='{{url_for('editPlayer', pid=Players.pid)}}' method='post'>
 
-			<p>Number: </p> <input type='text' size='30' number='number' placholder='{{item.number}}'>
-			<p>First Name: </p> <input type='text' size='30' fname='fname' placholder='{{item.fname}}'>
-			<p>Last Name: </p> <input type='text' size='30' lname='lname' placholder='{{item.lname}}'>
-			<p>Position: </p> <input type='text' size='30' position='position' placholder='{{item.position}}'>
+			<p>Number: </p> <input type='text' size='30' number='number' placholder='{{pid.number}}'>
+			<p>First Name: </p> <input type='text' size='30' fname='fname' placholder='{{pid.fname}}'>
+			<p>Last Name: </p> <input type='text' size='30' lname='lname' placholder='{{pid.lname}}'>
+			<p>Position: </p> <input type='text' size='30' position='position' placholder='{{pid.position}}'>
 
-		<input type='submit' value='Edit'>
+		<input type='submit' value='Save'>
 
 		<a href='#'>Cancel</a>
 
