@@ -5,16 +5,16 @@
 
 		<h1> Edit Player </h1>
 
-		<form action='{{url_for('editPlayer', pid=Players.pid)}}' method='post'>
+		<form action='{{url_for('editPlayer',team_id=players.team_id,pid=players.pid)}}' method='post'>
 
-			<p>Number: </p> <input type='text' size='30' number='number' placholder='{{pid.number}}'>
-			<p>First Name: </p> <input type='text' size='30' fname='fname' placholder='{{pid.fname}}'>
-			<p>Last Name: </p> <input type='text' size='30' lname='lname' placholder='{{pid.lname}}'>
-			<p>Position: </p> <input type='text' size='30' position='position' placholder='{{pid.position}}'>
+			<p>Number: <input type='text' size='2' name='number' placeholder='{{players.number}}'></p>
+			<p>First Name: <input type='text' size='30' name='fname' placeholder='{{players.fname}}'></p>
+			<p>Last Name: <input type='text' size='30' name='lname' placeholder='{{players.lname}}'></p>
+			<p>Position: <input type='text' size='10' name='position' placeholder='{{players.position}}'></p>
 
-		<input type='submit' value='Save'>
+		<p> <input type='submit' value='Save'>
 
-		<a href='#'>Cancel</a>
+		<a href='{{url_for('showRoster',team_id=players.team_id,pid=players.pid)}}'>Cancel</a></p>
 
 		</form>
 

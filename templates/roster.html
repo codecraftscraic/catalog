@@ -4,7 +4,7 @@
 
 		{% for player in players %}
 			{{player.number}} {{player.fname}} {{player.lname}} {{player.position}} 
-			<a href = '{{url_for('editPlayer',player=pid)}}'>Edit</a> <a href = '#'>Delete</a></br>
+			<a href = '{{url_for('editPlayer',team_id=player.team_id,pid=player.pid)}}'>Edit</a> <a href = '#'>Delete</a></br>
 		{% endfor %}
 		
 	</body>

@@ -54,7 +54,7 @@ def deleteTeam(team_id):
 #	return render_template('newTeam.html', Team = team)
 
 @app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
-def editPlayer(pid):
+def editPlayer(team_id,pid):
 	editedPlayer=session.query(Players).filter(Players.pid == pid).one()
 	if request.method == 'POST':
 		if request.form['number']:
@@ -68,17 +68,17 @@ def editPlayer(pid):
 			session.commit()
 			flash("Player's first name updated!")
 		if request.form['lname']:
-			editedPlayer.fname = request.form['lname']
+			editedPlayer.lname = request.form['lname']
 			session.add(editedPlayer)
 			session.commit()
 			flash("Player last name updated!")
-		if request.form['postion']:
-			editedPlayer.fname = request.form['postion']
+		if request.form['position']:
+			editedPlayer.position = request.form['position']
 			session.add(editedPlayer)
 			session.commit()
 			flash("Player position updated!")
 			#TO DO Ask if done editing the player before rendering the home page
-		return redirect(url_for('showTeams'))
+		return redirect(url_for('showRoster',team_id=team_id,pid=pid))
 	else:
 		return render_template('editPlayer.html', players = editedPlayer)
 

@@ -154,7 +154,7 @@ team14 = Team(team_name="Philadelphia Flyers")
 session.add(team14)
 session.commit()
 
-players14 = Players(fname="", lname="", number="", position="", team=team14)
+players14 = Players(fname="Claude", lname="Giroux", number="28", position="Forward", team=team14)
 
 session.add(players14)
 session.commit()
