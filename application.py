@@ -86,13 +86,13 @@ def editPlayer(team_id,pid):
 @app.route('/teams/<int:team_id>/newplayer/', methods=['GET', 'POST'])
 def newPlayer(team_id):
 	if request.method == 'POST':
-		if not request.form['number'] and not request.form['fname'] and not request.form['lname'] and not request.form['position']:
+		if request.form['number'] and request.form['fname'] and request.form['lname'] and request.form['position']:
 			newPlayer=Players(number=request.form['number'], fname=request.form['fname'],
 							  lname=request.form['lname'], position=request.form['position'],
 							  team_id=team_id)
 			session.add(newPlayer)
 			session.commit()
-			return render_template('showRoster',team_id=team_id)
+			return redirect(url_for('showRoster',team_id=team_id))
 	return render_template('newPlayer.html', team_id = team_id)
 
 @app.route('/teams/<int:team_id>/<int:pid>/delete/', methods=['GET', 'POST'])
