@@ -46,12 +46,13 @@ def editTeam(team_id):
 @app.route('/teams/<int:team_id>/delete/', methods=['GET', 'POST'])
 def deleteTeam(team_id):
 	deleteTeam=session.query(Team).filter(Team.tid == team_id).one()
-	return render_template('deleteTeam.html', team = deleteTeam)
-
-#@app.route('/teams/<int:team_id>/new', methods=['GET', 'POST'])
-#def newTeam(team_id):
-	#return "New team"
-#	return render_template('newTeam.html', Team = team)
+	if request.method == 'POST':
+		session.delete(deleteTeam.tid)
+		session.commit()
+		flash("Team deleted!")
+		return redirect(url_for('showTeams'))
+	else:
+		return render_template('deleteTeam.html', team = deleteTeam)
 
 @app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
 def editPlayer(team_id,pid):
@@ -82,17 +83,27 @@ def editPlayer(team_id,pid):
 	else:
 		return render_template('editPlayer.html', players = editedPlayer)
 
-	#return render_template('editPlayer.html', Team = team, Players = player)
+@app.route('/teams/<int:team_id>/newplayer/', methods=['GET', 'POST'])
+def newPlayer(team_id):
+	if request.method == 'POST':
+		if not request.form['number'] and not request.form['fname'] and not request.form['lname'] and not request.form['position']:
+			newPlayer=Players(number=request.form['number'], fname=request.form['fname'],
+							  lname=request.form['lname'], position=request.form['position'],
+							  team_id=team_id)
+			session.add(newPlayer)
+			session.commit()
+			return render_template('showRoster',team_id=team_id)
+	return render_template('newPlayer.html', team_id = team_id)
 
-#@app.route('/teams/<int:team_id>/<int:pid>/new/', methods=['GET', 'POST'])
-#def newPlayer(pid):
-	#return "New player"
-#	return render_template('newPlayer.html', Team = team, Players = player)
-
-#@app.route('/teams/<int:team_id>/<int:pid>/delete/', methods=['GET', 'POST'])
-#def deletePlayer(pid):
-	#return "Delete player"
-#	return render_template('deletePlayer.html', Team = team, Players = player)
+@app.route('/teams/<int:team_id>/<int:pid>/delete/', methods=['GET', 'POST'])
+def deletePlayer(team_id,pid):
+	deletePlayer=session.query(Players).filter(Players.pid == pid).one()
+	if request.method == 'POST':
+		session.delete(deletePlayer)
+		session.commit()
+		return redirect(url_for('showRoster',team_id=team_id,pid=pid))
+	else:
+		return render_template('deletePlayer.html', players = deletePlayer)
 
 
 
