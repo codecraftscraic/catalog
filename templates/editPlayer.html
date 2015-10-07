@@ -5,7 +5,7 @@
 
 		<h1> Edit Player </h1>
 
-		<form action='{{url_for('editPlayer',team_id=players.team_id,pid=players.pid)}}' method='post'>
+		<form action='{{url_for('editPlayer',team_id=players.team_id,pid=players.pid)}}' method='POST'>
 
 			<p>Number: <input type='text' size='2' name='number' placeholder='{{players.number}}'></p>
 			<p>First Name: <input type='text' size='30' name='fname' placeholder='{{players.fname}}'></p>

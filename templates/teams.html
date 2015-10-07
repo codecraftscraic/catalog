@@ -8,7 +8,6 @@
 				<li>
 					<a href='{{url_for('showRoster', team_id = team.tid)}}'>{{ team.team_name }}</a>
 					<a href='{{url_for('editTeam', team_id = team.tid)}}'>Edit</a>
-					<a href='{{url_for('deleteTeam', team_id = team.tid)}}'>Delete</a>
 				</li> 
 				
 			{% endfor %}

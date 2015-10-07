@@ -1,0 +1,20 @@
+<html>
+	<head></head>
+
+	<body>
+
+		<h1> Delete Player </h1>
+
+		<form action='{{url_for('deletePlayer',team_id=players.team_id,pid=players.pid)}}' method='POST'>
+
+			<p>Are you sure you want to delete {{players.fname}} {{players.lname}}?</p>
+			
+		<input type='submit' value='Delete'/>
+
+		<a href='{{url_for('showRoster',team_id=players.team_id,pid=players.pid)}}'>Cancel</a>
+
+		</form>
+
+	</body>
+
+</html>
