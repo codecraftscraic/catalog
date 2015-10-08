@@ -1,6 +1,6 @@
 <html>
 	<body>
-		<h1>{{ team.team_name }}</h1>
+		<a href='{{url_for('showTeams')}}'><h1>{{ team.team_name }}</h1></a>
 
 		{% for player in players %}
 			{{player.number}} {{player.fname}} {{player.lname}} {{player.position}} 
