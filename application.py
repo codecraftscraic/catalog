@@ -32,7 +32,7 @@ def showLogin():
 		login_session['state'] = state
 		return render_template('login.html', STATE=state)
 
-@app.route('/gconnect', methods=['POST'])
+@app.route('/gconnect', methods=['POST','GET'])
 def gconnect():
     # Validate state token
     if request.args.get('state') != login_session['state']:
@@ -122,6 +122,26 @@ def gdisconnect():
 		response = make_response(json.dumps('Current user not connected.'), 401)
 		response.headers['Content-Type'] = 'application/json'
 		return response
+	access_token = credentials.access_token
+	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+	h = httplib2.Http()
+	result = h.request(url, 'GET')[0]
+
+	if result['status'] == 200:
+		#reset user info
+		del login_session['credentials']
+		del login_session['gplus_id']
+		del login_session['username']
+		del login_session['email']
+		del login_session['picture']
+
+		response = make_response(json.dumps('Successfully disconnected.'), 200)
+		response.headers['Content-Type'] = 'application/json'
+		return response
+	else:
+		response = make_response(json.dumps('Failed to logout user.'), 400)
+		response.headers['Content-Type'] = 'application.json'
+		return response
 
 #show all teams in database
 @app.route('/')
@@ -141,6 +161,9 @@ def showRoster(team_id):
 #edit the team name
 @app.route('/teams/<int:team_id>/edit/', methods=['GET', 'POST'])
 def editTeam(team_id):
+	if 'username' not in login_session:
+		return redirect('/login')
+
 	editedTeam=session.query(Team).filter(Team.tid == team_id).one()
 	if request.method == 'POST':
 		if request.form['teamname']:
@@ -152,20 +175,11 @@ def editTeam(team_id):
 	else:
 		return render_template('editTeam.html', team = editedTeam)
 
-#delete a team from the database
-@app.route('/teams/<int:team_id>/delete/', methods=['GET', 'POST'])
-def deleteTeam(team_id):
-	deleteTeam=session.query(Team).filter(Team.tid == team_id).one()
-	if request.method == 'POST':
-		session.delete(deleteTeam.tid)
-		session.commit()
-		flash("Team deleted!")
-		return redirect(url_for('showTeams'))
-	else:
-		return render_template('deleteTeam.html', team = deleteTeam)
-
 @app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
 def editPlayer(team_id,pid):
+	if 'username' not in login_session:
+		return redirect('/login')
+
 	editedPlayer=session.query(Players).filter(Players.pid == pid).one()
 	if request.method == 'POST':
 		if request.form['number']:
@@ -195,6 +209,9 @@ def editPlayer(team_id,pid):
 
 @app.route('/teams/<int:team_id>/newplayer/', methods=['GET', 'POST'])
 def newPlayer(team_id):
+	if 'username' not in login_session:
+		return redirect('/login')
+
 	if request.method == 'POST':
 		if request.form['number'] and request.form['fname'] and request.form['lname'] and request.form['position']:
 			newPlayer=Players(number=request.form['number'], fname=request.form['fname'],
@@ -207,6 +224,9 @@ def newPlayer(team_id):
 
 @app.route('/teams/<int:team_id>/<int:pid>/delete/', methods=['GET', 'POST'])
 def deletePlayer(team_id,pid):
+	if 'username' not in login_session:
+		return redirect('/login')
+
 	deletePlayer=session.query(Players).filter(Players.pid == pid).one()
 	if request.method == 'POST':
 		session.delete(deletePlayer)
@@ -215,6 +235,12 @@ def deletePlayer(team_id,pid):
 	else:
 		return render_template('deletePlayer.html', players = deletePlayer)
 
+def createUser(login_session):
+	newUser = Users(name = login_session['username'], email = login_session['email'])
+	session.add(newUser)
+	session.commit()
+	user = session.query(Users).filter_by(email = login_session['email']).one()
+	return user.uid
 
 
 if __name__ == '__main__':

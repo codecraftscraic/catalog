@@ -31,11 +31,11 @@
 						processData: false,
 						contentType: 'application/octet-stream; charset=utf-8',
 						data: authResult['code'],
-						sucess: function(result) {
+						success: function(result) {
 							if (result) {
 								$('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
 								setTimeout(function(){
-									window.location.href = "/teams";
+									window.location.href = "/teams/";
 								}, 4000);
 							}
 							else if (authResult['error']){
