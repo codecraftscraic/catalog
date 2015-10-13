@@ -32,7 +32,7 @@ def showLogin():
 		login_session['state'] = state
 		return render_template('login.html', STATE=state)
 
-@app.route('/gconnect', methods=['POST','GET'])
+@app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
     if request.args.get('state') != login_session['state']:
@@ -122,12 +122,12 @@ def gdisconnect():
 		response = make_response(json.dumps('Current user not connected.'), 401)
 		response.headers['Content-Type'] = 'application/json'
 		return response
-	access_token = credentials.access_token
+	access_token = credentials
 	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[0]
 
-	if result['status'] == 200:
+	if result['status'] == '200':
 		#reset user info
 		del login_session['credentials']
 		del login_session['gplus_id']
@@ -137,6 +137,7 @@ def gdisconnect():
 
 		response = make_response(json.dumps('Successfully disconnected.'), 200)
 		response.headers['Content-Type'] = 'application/json'
+		#return render_template('teams.html')
 		return response
 	else:
 		response = make_response(json.dumps('Failed to logout user.'), 400)
