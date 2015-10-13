@@ -103,6 +103,12 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    #check if return user
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+    	user_id = createUser(login_session)
+    login_session['user_id'] = users.uid
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -149,15 +155,24 @@ def gdisconnect():
 @app.route('/teams/')
 def showTeams():
 	teamList = session.query(Team).all()
-	return render_template('teams.html',teams=teamList)
+	if team.user_id == login_session['user_id']:
+		return render_template('teams.html',teams=teamList)
+	else:
+		return render_template('public_teams.html',teams=teamList)
 
 #see the roster of a given team
 @app.route('/teams/<int:team_id>/', methods=['GET','POST'])
 @app.route('/teams/<int:team_id>/roster/', methods=['GET','POST'])
 def showRoster(team_id):
 	team=session.query(Team).filter(Team.tid == team_id).one()
+	owner=getUserInfo(team.user_id)
 	players=session.query(Players).filter(Players.team_id == team_id).all()
-	return render_template('roster.html', team=team, players=players)
+	if owner != login_session['user_id']:
+		return render_template('public_roster.html', team=team, players=players)
+	elif 'username' not in login_session:
+		return redirect('/login')
+	else:
+		return render_template('roster.html', team=team, players=players))
 
 #edit the team name
 @app.route('/teams/<int:team_id>/edit/', methods=['GET', 'POST'])
@@ -217,7 +232,7 @@ def newPlayer(team_id):
 		if request.form['number'] and request.form['fname'] and request.form['lname'] and request.form['position']:
 			newPlayer=Players(number=request.form['number'], fname=request.form['fname'],
 							  lname=request.form['lname'], position=request.form['position'],
-							  team_id=team_id)
+							  team_id=team_id, user_id=login_session['user_id'])
 			session.add(newPlayer)
 			session.commit()
 			return redirect(url_for('showRoster',team_id=team_id))
@@ -235,6 +250,17 @@ def deletePlayer(team_id,pid):
 		return redirect(url_for('showRoster',team_id=team_id,pid=pid))
 	else:
 		return render_template('deletePlayer.html', players = deletePlayer)
+
+def getUserID(email):
+	try:
+		user = session.query(Users).filter_by(email = email).one()
+		return users.uid
+	except:
+		return None
+
+def getUserInfo(user_id):
+	user = session.query(Users).filter_by(id = user_id).one()
+	return user
 
 def createUser(login_session):
 	newUser = Users(name = login_session['username'], email = login_session['email'])

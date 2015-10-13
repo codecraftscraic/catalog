@@ -24,7 +24,7 @@ team1 = Team(team_name="Boston Bruins")
 session.add(team1)
 session.commit()
 
-players1 = Players(fname="Zedeno", lname="Chara", number="33", position="Defense", team=team1)
+players1 = Players(fname="Zdeno", lname="Chara", number="33", position="Defense", team=team1)
 
 session.add(players1)
 session.commit()

@@ -1,0 +1,24 @@
+<html>
+	<body>
+		<h1>NHL Teams</h1> 
+
+		<p>
+			<a href='{{url_for('showLogin')}}'>Login</a>
+		</p>
+		<p>
+			<a href='{{url_for('gdisconnect')}}'>Logout</a>
+		</p>
+
+			<ul>
+			{% for team in teams %}
+				
+				<li>
+					<a href='{{url_for('showRoster', team_id = team.tid)}}'>{{ team.team_name }}</a>
+				</li> 
+				
+			{% endfor %}
+			</ul>
+
+	</body>
+
+</html>
