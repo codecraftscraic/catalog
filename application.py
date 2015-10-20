@@ -155,10 +155,14 @@ def gdisconnect():
 @app.route('/teams/')
 def showTeams():
 	teamList = session.query(Team).all()
-	if team.user_id == login_session['user_id']:
-		return render_template('teams.html',teams=teamList)
-	else:
+	for team in teamList:
+		owner=getUserInfo(team.user_id)
+	if owner != login_session['username']:
 		return render_template('public_teams.html',teams=teamList)
+	elif 'username' not in login_session:
+		return redirect('/login')
+	else:
+		return render_template('teams.html',teams=teamList)
 
 #see the roster of a given team
 @app.route('/teams/<int:team_id>/', methods=['GET','POST'])
@@ -167,12 +171,12 @@ def showRoster(team_id):
 	team=session.query(Team).filter(Team.tid == team_id).one()
 	owner=getUserInfo(team.user_id)
 	players=session.query(Players).filter(Players.team_id == team_id).all()
-	if owner != login_session['user_id']:
+	if owner != login_session['username']:
 		return render_template('public_roster.html', team=team, players=players)
 	elif 'username' not in login_session:
 		return redirect('/login')
 	else:
-		return render_template('roster.html', team=team, players=players))
+		return render_template('roster.html', team=team, players=players)
 
 #edit the team name
 @app.route('/teams/<int:team_id>/edit/', methods=['GET', 'POST'])
@@ -254,12 +258,12 @@ def deletePlayer(team_id,pid):
 def getUserID(email):
 	try:
 		user = session.query(Users).filter_by(email = email).one()
-		return users.uid
+		return user.uid
 	except:
 		return None
 
 def getUserInfo(user_id):
-	user = session.query(Users).filter_by(id = user_id).one()
+	user = session.query(Users).filter_by(uid = user_id).one()
 	return user
 
 def createUser(login_session):

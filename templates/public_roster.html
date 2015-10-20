@@ -8,10 +8,12 @@
 			<a href='{{url_for('gdisconnect')}}'>Logout</a>
 		</p>
 
-
+		
 		{% for player in players %}
 			{{player.number}} {{player.fname}} {{player.lname}} {{player.position}} 
+				<br/>
 		{% endfor %}
+		
 		<br>
 		<a href='{{url_for('newPlayer',team_id=team.tid)}}'>New Player</a>
 	</body>
