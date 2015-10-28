@@ -155,14 +155,10 @@ def gdisconnect():
 @app.route('/teams/')
 def showTeams():
 	teamList = session.query(Team).all()
-	for team in teamList:
-		owner=getUserInfo(team.user_id)
-	if owner != login_session['username']:
-		return render_template('public_teams.html',teams=teamList)
-	elif 'username' not in login_session:
-		return redirect('/login')
-	else:
+	if login_session['username']:
 		return render_template('teams.html',teams=teamList)
+	else:
+		return render_template('public_teams.html',teams=teamList)
 
 #see the roster of a given team
 @app.route('/teams/<int:team_id>/', methods=['GET','POST'])
