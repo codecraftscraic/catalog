@@ -155,22 +155,21 @@ def gdisconnect():
 @app.route('/teams/')
 def showTeams():
 	teamList = session.query(Team).all()
-	if login_session['username']:
-		return render_template('teams.html',teams=teamList)
-	else:
+	if 'username' not in login_session:
+		flash('Please login to make changes.')
 		return render_template('public_teams.html',teams=teamList)
+	else:
+		return render_template('teams.html',teams=teamList)
 
 #see the roster of a given team
 @app.route('/teams/<int:team_id>/', methods=['GET','POST'])
 @app.route('/teams/<int:team_id>/roster/', methods=['GET','POST'])
 def showRoster(team_id):
 	team=session.query(Team).filter(Team.tid == team_id).one()
-	owner=getUserInfo(team.user_id)
 	players=session.query(Players).filter(Players.team_id == team_id).all()
-	if owner != login_session['username']:
+	if 'username' not in login_session:
+		flash('Please login to make changes.')
 		return render_template('public_roster.html', team=team, players=players)
-	elif 'username' not in login_session:
-		return redirect('/login')
 	else:
 		return render_template('roster.html', team=team, players=players)
 
@@ -180,16 +179,21 @@ def editTeam(team_id):
 	if 'username' not in login_session:
 		return redirect('/login')
 
-	editedTeam=session.query(Team).filter(Team.tid == team_id).one()
-	if request.method == 'POST':
-		if request.form['teamname']:
-			editedTeam.team_name = request.form['teamname']
-			session.add(editedTeam)
-			session.commit()
-			flash("Team updated!")
-		return redirect(url_for('showTeams'))
-	else:
-		return render_template('editTeam.html', team = editedTeam)
+	owner=getUserInfo(team.user_id)
+
+	if owner.name != login_session['username']
+		flash('You are not the owner of this team, and cannot edit it.')
+	else: 
+		editedTeam=session.query(Team).filter(Team.tid == team_id).one()
+		if request.method == 'POST':
+			if request.form['teamname']:
+				editedTeam.team_name = request.form['teamname']
+				session.add(editedTeam)
+				session.commit()
+				flash("Team updated!")
+			return redirect(url_for('showTeams'))
+		else:
+			return render_template('editTeam.html', team = editedTeam)
 
 @app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
 def editPlayer(team_id,pid):
