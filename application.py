@@ -179,9 +179,10 @@ def editTeam(team_id):
 	if 'username' not in login_session:
 		return redirect('/login')
 
-	owner=getUserInfo(team.user_id)
+	team_owner=session.query(Team).filter(Team.tid == team_id).one()
+	owner=getUserInfo(team_owner.user_id)
 
-	if owner.name != login_session['username']
+	if owner.name != login_session['username']:
 		flash('You are not the owner of this team, and cannot edit it.')
 	else: 
 		editedTeam=session.query(Team).filter(Team.tid == team_id).one()
@@ -200,32 +201,38 @@ def editPlayer(team_id,pid):
 	if 'username' not in login_session:
 		return redirect('/login')
 
-	editedPlayer=session.query(Players).filter(Players.pid == pid).one()
-	if request.method == 'POST':
-		if request.form['number']:
-			editedPlayer.number = request.form['number']
-			session.add(editedPlayer)
-			session.commit()
-			flash("Player number updated!")
-		if request.form['fname']:
-			editedPlayer.fname = request.form['fname']
-			session.add(editedPlayer)
-			session.commit()
-			flash("Player's first name updated!")
-		if request.form['lname']:
-			editedPlayer.lname = request.form['lname']
-			session.add(editedPlayer)
-			session.commit()
-			flash("Player last name updated!")
-		if request.form['position']:
-			editedPlayer.position = request.form['position']
-			session.add(editedPlayer)
-			session.commit()
-			flash("Player position updated!")
-			#TO DO Ask if done editing the player before rendering the home page
-		return redirect(url_for('showRoster',team_id=team_id,pid=pid))
+	player_owner=session.query(Players).filter(Players.pid == pid).one()
+	owner=getUserInfo(player_owner.user_id)
+
+	if owner.name != login_session['username']:
+		flash('You are not the owner of this team, and cannot edit it.')
 	else:
-		return render_template('editPlayer.html', players = editedPlayer)
+		editedPlayer=session.query(Players).filter(Players.pid == pid).one()
+		if request.method == 'POST':
+			if request.form['number']:
+				editedPlayer.number = request.form['number']
+				session.add(editedPlayer)
+				session.commit()
+				flash("Player number updated!")
+			if request.form['fname']:
+				editedPlayer.fname = request.form['fname']
+				session.add(editedPlayer)
+				session.commit()
+				flash("Player's first name updated!")
+			if request.form['lname']:
+				editedPlayer.lname = request.form['lname']
+				session.add(editedPlayer)
+				session.commit()
+				flash("Player last name updated!")
+			if request.form['position']:
+				editedPlayer.position = request.form['position']
+				session.add(editedPlayer)
+				session.commit()
+				flash("Player position updated!")
+				#TO DO Ask if done editing the player before rendering the home page
+			return redirect(url_for('showRoster',team_id=team_id,pid=pid))
+		else:
+			return render_template('editPlayer.html', players = editedPlayer)
 
 @app.route('/teams/<int:team_id>/newplayer/', methods=['GET', 'POST'])
 def newPlayer(team_id):
