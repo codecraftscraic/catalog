@@ -2,21 +2,22 @@
 	<body>
 		<h1>NHL Teams</h1> 
 
-		{% if 'username' not in login_session: %}
+		{% if not session.logged_in %}
 			<p>
-				<a href='{{url_for('showLogin')}}'>Login</a>
+				<a href="{{url_for('showLogin')}}">Login</a>
 			</p>
-		{% else: %}
+		{% else %}
 			<p>
-				<a href='{{url_for('gdisconnect')}}'>Logout</a>
+				<a href="{{url_for('gdisconnect')}}">Logout</a>
 			</p>
+		{% endif %}
 
 			<ul>
 			{% for team in teams %}
 				
 				<li>
-					<a href='{{url_for('showRoster', team_id = team.tid)}}'>{{ team.team_name }}</a>
-					<a href='{{url_for('editTeam', team_id = team.tid)}}'>Edit</a>
+					<a href="{{url_for('showRoster', team_id = team.tid)}}">{{ team.team_name }}</a>
+					<a href="{{url_for('editTeam', team_id = team.tid)}}">Edit</a>
 				</li> 
 				
 			{% endfor %}

@@ -3,19 +3,20 @@
 
 	<body>
 
-		<a href='{{url_for('showTeams')}}'><h1> Edit Player </h1></a>
+		<a href="{{url_for('showTeams')}}"><h1> Edit Player </h1></a>
 		
-		{% if 'username' not in login_session: %}
+		{% if 'username' not in login_session %}
 			<p>
-				<a href='{{url_for('showLogin')}}'>Login</a>
+				<a href="{{url_for('showLogin')}}">Login</a>
 			</p>
-		{% else: %}
+		{% else %}
 			<p>
-				<a href='{{url_for('gdisconnect')}}'>Logout</a>
+				<a href="{{url_for('gdisconnect')}}">Logout</a>
 			</p>
+		{% endif %}
 
 
-		<form action='{{url_for('editPlayer',team_id=players.team_id,pid=players.pid)}}' method='POST'>
+		<form action="{{url_for('editPlayer',team_id=players.team_id,pid=players.pid)}}" method='POST'>
 
 			<p>Number: <input type='text' size='2' name='number' placeholder='{{players.number}}'></p>
 			<p>First Name: <input type='text' size='30' name='fname' placeholder='{{players.fname}}'></p>
@@ -24,7 +25,7 @@
 
 		<p> <input type='submit' value='Save'>
 
-		<a href='{{url_for('showRoster',team_id=players.team_id,pid=players.pid)}}'>Cancel</a></p>
+		<a href="{{url_for('showRoster',team_id=players.team_id,pid=players.pid)}}">Cancel</a></p>
 
 		</form>
 

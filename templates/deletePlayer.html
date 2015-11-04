@@ -5,23 +5,24 @@
 
 		<h1> Delete Player </h1>
 		
-		{% if 'username' not in login_session: %}
+		{% if 'username' not in login_session %}
 			<p>
-				<a href='{{url_for('showLogin')}}'>Login</a>
+				<a href="{{url_for('showLogin')}}">Login</a>
 			</p>
-		{% else: %}
+		{% else %}
 			<p>
-				<a href='{{url_for('gdisconnect')}}'>Logout</a>
+				<a href="{{url_for('gdisconnect')}}">Logout</a>
 			</p>
+		{% endif %}
 
 
-		<form action='{{url_for('deletePlayer',team_id=players.team_id,pid=players.pid)}}' method='POST'>
+		<form action="{{url_for('deletePlayer',team_id=players.team_id,pid=players.pid)}}" method='POST'>
 
 			<p>Are you sure you want to delete {{players.fname}} {{players.lname}}?</p>
 			
 		<input type='submit' value='Delete'/>
 
-		<a href='{{url_for('showRoster',team_id=players.team_id,pid=players.pid)}}'>Cancel</a>
+		<a href="{{url_for('showRoster',team_id=players.team_id,pid=players.pid)}}">Cancel</a>
 
 		</form>
 

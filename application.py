@@ -107,7 +107,7 @@ def gconnect():
     user_id = getUserID(login_session['email'])
     if not user_id:
     	user_id = createUser(login_session)
-    login_session['user_id'] = users.uid
+    	login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '
@@ -182,8 +182,9 @@ def editTeam(team_id):
 	team_owner=session.query(Team).filter(Team.tid == team_id).one()
 	owner=getUserInfo(team_owner.user_id)
 
-	if owner.name != login_session['username']:
+	if owner.email != login_session['email']:
 		flash('You are not the owner of this team, and cannot edit it.')
+		return redirect(url_for('showTeams'))
 	else: 
 		editedTeam=session.query(Team).filter(Team.tid == team_id).one()
 		if request.method == 'POST':
@@ -204,7 +205,7 @@ def editPlayer(team_id,pid):
 	player_owner=session.query(Players).filter(Players.pid == pid).one()
 	owner=getUserInfo(player_owner.user_id)
 
-	if owner.name != login_session['username']:
+	if owner.email != login_session['email']:
 		flash('You are not the owner of this team, and cannot edit it.')
 	else:
 		editedPlayer=session.query(Players).filter(Players.pid == pid).one()
