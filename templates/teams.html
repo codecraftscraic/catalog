@@ -1,15 +1,14 @@
 <html>
+	<head>
+	</head>
+	
 	<body>
 		<h1>NHL Teams</h1> 
 
-		{% if not session.logged_in %}
-			<p>
-				<a href="{{url_for('showLogin')}}">Login</a>
-			</p>
+		{% if 'username' not in login_session %}
+			<a href="{{url_for('showLogin')}}">Login</a>
 		{% else %}
-			<p>
-				<a href="{{url_for('gdisconnect')}}">Logout</a>
-			</p>
+			<a href="{{url_for('gdisconnect')}}">Logout</a>
 		{% endif %}
 
 			<ul>
@@ -22,6 +21,16 @@
 				
 			{% endfor %}
 			</ul>
+
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<ul class=flashes>
+					{% for message in messages %}
+						<li>{{ message }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %}
 
 	</body>
 

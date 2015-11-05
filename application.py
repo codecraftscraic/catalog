@@ -115,7 +115,7 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 200px; height: 200px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -155,9 +155,10 @@ def gdisconnect():
 @app.route('/teams/')
 def showTeams():
 	teamList = session.query(Team).all()
+	flash(login_session)
 	if 'username' not in login_session:
 		flash('Please login to make changes.')
-		return render_template('public_teams.html',teams=teamList)
+		return render_template('public_teams.html',teams=teamList,login_session=login_session)
 	else:
 		return render_template('teams.html',teams=teamList)
 
