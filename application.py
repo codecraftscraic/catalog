@@ -155,12 +155,10 @@ def gdisconnect():
 @app.route('/teams/')
 def showTeams():
 	teamList = session.query(Team).all()
-	flash(login_session)
 	if 'username' not in login_session:
-		flash('Please login to make changes.')
 		return render_template('public_teams.html',teams=teamList,login_session=login_session)
 	else:
-		return render_template('teams.html',teams=teamList)
+		return render_template('teams.html',teams=teamList,login_session=login_session)
 
 #see the roster of a given team
 @app.route('/teams/<int:team_id>/', methods=['GET','POST'])
@@ -170,9 +168,9 @@ def showRoster(team_id):
 	players=session.query(Players).filter(Players.team_id == team_id).all()
 	if 'username' not in login_session:
 		flash('Please login to make changes.')
-		return render_template('public_roster.html', team=team, players=players)
+		return render_template('public_roster.html', team=team, players=players,login_session=login_session)
 	else:
-		return render_template('roster.html', team=team, players=players)
+		return render_template('roster.html', team=team, players=players,login_session=login_session)
 
 #edit the team name
 @app.route('/teams/<int:team_id>/edit/', methods=['GET', 'POST'])
@@ -201,13 +199,15 @@ def editTeam(team_id):
 @app.route('/teams/<int:team_id>/<int:pid>/edit/', methods=['GET', 'POST'])
 def editPlayer(team_id,pid):
 	if 'username' not in login_session:
-		return redirect('/login')
+		flash('You are not the owner of this team, and cannot edit it.')
+		return redirect(url_for('showRoster',team_id=team_id,pid=pid,login_session=login_session))
 
 	player_owner=session.query(Players).filter(Players.pid == pid).one()
 	owner=getUserInfo(player_owner.user_id)
 
 	if owner.email != login_session['email']:
 		flash('You are not the owner of this team, and cannot edit it.')
+		return redirect(url_for('showRoster',team_id=team_id,pid=pid,login_session=login_session))
 	else:
 		editedPlayer=session.query(Players).filter(Players.pid == pid).one()
 		if request.method == 'POST':
@@ -232,9 +232,9 @@ def editPlayer(team_id,pid):
 				session.commit()
 				flash("Player position updated!")
 				#TO DO Ask if done editing the player before rendering the home page
-			return redirect(url_for('showRoster',team_id=team_id,pid=pid))
+			return redirect(url_for('showRoster',team_id=team_id,pid=pid,login_session=login_session))
 		else:
-			return render_template('editPlayer.html', players = editedPlayer)
+			return render_template('editPlayer.html', players = editedPlayer,login_session=login_session)
 
 @app.route('/teams/<int:team_id>/newplayer/', methods=['GET', 'POST'])
 def newPlayer(team_id):
@@ -248,8 +248,8 @@ def newPlayer(team_id):
 							  team_id=team_id, user_id=login_session['user_id'])
 			session.add(newPlayer)
 			session.commit()
-			return redirect(url_for('showRoster',team_id=team_id))
-	return render_template('newPlayer.html', team_id = team_id)
+			return redirect(url_for('showRoster',team_id=team_id,login_session=login_session))
+	return render_template('newPlayer.html', team_id = team_id,login_session=login_session)
 
 @app.route('/teams/<int:team_id>/<int:pid>/delete/', methods=['GET', 'POST'])
 def deletePlayer(team_id,pid):
@@ -260,9 +260,9 @@ def deletePlayer(team_id,pid):
 	if request.method == 'POST':
 		session.delete(deletePlayer)
 		session.commit()
-		return redirect(url_for('showRoster',team_id=team_id,pid=pid))
+		return redirect(url_for('showRoster',team_id=team_id,pid=pid,login_session=login_session))
 	else:
-		return render_template('deletePlayer.html', players = deletePlayer)
+		return render_template('deletePlayer.html', players = deletePlayer,login_session=login_session)
 
 def getUserID(email):
 	try:
