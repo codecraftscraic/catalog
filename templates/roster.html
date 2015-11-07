@@ -1,22 +1,49 @@
 <html>
-	<body>
-		<a href="{{url_for('showTeams')}}"><h1>{{ team.team_name }}</h1></a>
-		
-		{% if 'username' not in login_session %}
-			<p>
-				<a href="{{url_for('showLogin')}}">Login</a>
-			</p>
-		{% else %}
-			<p>
-				<a href="{{url_for('gdisconnect')}}">Logout</a>
-			</p>
-		{% endif %}
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+		<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Signika:600' rel='stylesheet' type='text/css'>
+	</head>
 
+	<body>
+		<h1><a href="{{url_for('showTeams')}}" class="header"> {{ team.team_name }} </a></h1>
+		
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<ul class=flashes>
+					{% for message in messages %}
+						<li>{{ message }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %} 
+
+		<div class="login_out">
+			<a href="{{url_for('newPlayer',team_id=team.tid)}}">New Player</a>
+
+			&nbsp;&nbsp;&nbsp;
+
+			{% if 'username' not in login_session %}
+				<a href="{{url_for('showLogin')}}">Login</a>
+			{% else %}
+				<a href="{{url_for('gdisconnect')}}">Logout</a>
+			{% endif %}
+		</div>
+
+		<br />
+		<br />
 		{% for player in players %}
-			{{player.number}} {{player.fname}} {{player.lname}} {{player.position}} 
-			<a href = "{{url_for('editPlayer',team_id=player.team_id,pid=player.pid)}}">Edit</a> <a href = "{{url_for('deletePlayer',team_id=player.team_id,pid=player.pid)}}">Delete</a><br/>
+		<table>
+			<tr>
+				<td>{{player.number}}</td> 
+				<td>{{player.fname}} {{player.lname}}</td>
+				<td>{{player.position}}</td>
+				<td>
+					<a href = "{{url_for('editPlayer',team_id=player.team_id,pid=player.pid)}}" class="cancel">Edit</a>
+					<a href = "{{url_for('deletePlayer',team_id=player.team_id,pid=player.pid)}}" class="cancel">Delete</a>
+				</td>
+			</tr>
+		</table>
 		{% endfor %}
-		<br>
-		<a href="{{url_for('newPlayer',team_id=team.tid)}}">New Player</a>
 	</body>
 </html>

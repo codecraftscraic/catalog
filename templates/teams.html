@@ -1,26 +1,12 @@
 <html>
 	<head>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+		<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Signika:600' rel='stylesheet' type='text/css'>
 	</head>
 	
 	<body>
-		<h1>NHL Teams</h1> 
-
-		{% if 'username' not in login_session %}
-			<a href="{{url_for('showLogin')}}">Login</a>
-		{% else %}
-			<a href="{{url_for('gdisconnect')}}">Logout</a>
-		{% endif %}
-
-			<ul>
-			{% for team in teams %}
-				
-				<li>
-					<a href="{{url_for('showRoster', team_id = team.tid)}}">{{ team.team_name }}</a>
-					<a href="{{url_for('editTeam', team_id = team.tid)}}">Edit</a>
-				</li> 
-				
-			{% endfor %}
-			</ul>
+		<h1><a href="{{url_for('showTeams')}}" class="header"> NHL Teams </a></h1>
 
 		{% with messages = get_flashed_messages() %}
 			{% if messages %}
@@ -30,8 +16,25 @@
 					{% endfor %}
 				</ul>
 			{% endif %}
-		{% endwith %}
+		{% endwith %} 
 
+		<div class="login_out">
+			{% if 'username' not in login_session %}
+				<a href="{{url_for('showLogin')}}">Login</a>
+			{% else %}
+				<a href="{{url_for('gdisconnect')}}">Logout</a>
+			{% endif %}
+		</div>
+
+		<br />
+
+		<div class="teamlist">
+			{% for team in teams %}
+					<a href="{{url_for('editTeam', team_id = team.tid)}}" class="cancel">Edit</a> &nbsp;&nbsp;&nbsp;
+					<a href="{{url_for('showRoster', team_id = team.tid)}}" class="teams">{{ team.team_name }}</a>
+					<br />
+			{% endfor %}
+		</div>
 	</body>
 
 </html>

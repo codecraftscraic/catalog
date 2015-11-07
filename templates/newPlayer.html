@@ -1,30 +1,44 @@
 <html>
-	<head></head>
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+		<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Signika:600' rel='stylesheet' type='text/css'>
+	</head>
 
 	<body>
 
-		<a href="{{url_for('showTeams')}}"><h1> New Player </h1></a>
+		<h1><a href="{{url_for('showTeams')}}" class="header"> New Player </a></h1>
 		
-		{% if 'username' not in login_session %}
-			<p>
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<ul class=flashes>
+					{% for message in messages %}
+						<li>{{ message }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %} 
+
+		<div class="login_out">
+			{% if 'username' not in login_session %}
 				<a href="{{url_for('showLogin')}}">Login</a>
-			</p>
-		{% else %}
-			<p>
+			{% else %}
 				<a href="{{url_for('gdisconnect')}}">Logout</a>
-			</p>
-		{% endif %}
+			{% endif %}
+		</div>
 
 		<form action="{{url_for('newPlayer',team_id=team_id)}}" method='post'>
 
-			<p>Number: <input type='text' size='8' name='number'></p> 
-			<p>First Name: <input type='text' size='30' name='fname'></p> 
-			<p>Last Name: <input type='text' size='30' name='lname'></p> 
-			<p>Position: <input type='text' size='30' name='position'></p> 
+			<p>Number: <input type='text' size='2' name='number' placeholder="#"></p>
+			<p>First Name: <input type='text' size='30' name='fname' placeholder="First Name"></p>
+			<p>Last Name: <input type='text' size='30' name='lname' placeholder="Last Name"></p>
+			<p>Position: <input type='text' size='10' name='position' placeholder="Position"></p>
 
-		<input type='submit' value='Create'>
+		<p>
+			<input type='submit' value='Create' class="cancel">
 
-		<a href="{{url_for('showRoster',team_id=team_id)}}">Cancel</a>
+			<a href="{{url_for('showRoster',team_id=team_id)}}" class="cancel">Cancel</a>
+		</p>
 
 		</form>
 

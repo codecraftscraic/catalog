@@ -167,7 +167,6 @@ def showRoster(team_id):
 	team=session.query(Team).filter(Team.tid == team_id).one()
 	players=session.query(Players).filter(Players.team_id == team_id).all()
 	if 'username' not in login_session:
-		flash('Please login to make changes.')
 		return render_template('public_roster.html', team=team, players=players,login_session=login_session)
 	else:
 		return render_template('roster.html', team=team, players=players,login_session=login_session)
@@ -264,6 +263,25 @@ def deletePlayer(team_id,pid):
 	else:
 		return render_template('deletePlayer.html', players = deletePlayer,login_session=login_session)
 
+#JSON EndPoints
+@app.route('/teams/JSON')
+def leagueJSON():
+	league = session.query(Team).all()
+	return jsonify(league=[l.serialize for l in league])
+
+@app.route('/teams/<int:team_id>/roster/JSON')
+def rosterJSON(team_id):
+	team = session.query(Team).filter_by(tid=team_id).one()
+	players = session.query(Players).filter_by(team_id=team_id).all()
+	return jsonify(players=[p.serialize for p in players])
+
+@app.route('/teams/player/<int:pid>/JSON')
+def playerJSON(pid):
+	player = session.query(Players).filter_by(pid=pid).one()
+	return jsonify(player=player.serialize)
+
+
+#helper functions to look up users
 def getUserID(email):
 	try:
 		user = session.query(Users).filter_by(email = email).one()
@@ -286,4 +304,4 @@ def createUser(login_session):
 if __name__ == '__main__':
 	app.secret_key = 'secret_key'
 	app.debug = True
-	app.run(host = '0.0.0.0', port = 5000)
+	app.run(host='0.0.0.0', port=5000)

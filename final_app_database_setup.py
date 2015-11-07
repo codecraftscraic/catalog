@@ -24,6 +24,12 @@ class Team(Base):
 	user_id = Column(Integer, ForeignKey('users.uid'))
 	owner = relationship(Users)
 
+	@property
+	def serialize(self):
+		return {
+	   		'tid': self.tid,
+        	'team name': self.team_name,
+    	}
 
 class Players(Base):
 	__tablename__ = 'players'
@@ -38,6 +44,15 @@ class Players(Base):
 	user_id = Column(Integer, ForeignKey('users.uid'))
 	owner = relationship(Users)
 
+	@property
+	def serialize(self):
+		return {
+    		'pid': self.pid,
+        	'number': self.number,
+        	'first name': self.fname,
+    		'last name': self.lname,
+    		'position': self.position
+		}
 
 engine = create_engine('sqlite:///nhlteams.db')
 
